@@ -12,38 +12,38 @@ const char* password = STAPSK;
 
 void setup() {
   Serial.begin(115200);
+  Serial.println("");
 
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
+  Serial.printf("[WiFi] Connect to %s\n", ssid);
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
 
+  Serial.print("[WiFi] Connecting");
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
   Serial.println("");
 
-  Serial.print("WiFi connected: ");
-  Serial.println(ssid);
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
+  Serial.println("[WiFi] Connected!");
+  Serial.printf("[WiFi] IP address: %s\n", WiFi.localIP().toString().c_str());
 
   dht.setup(4, DHTesp::DHT11); // Connect DHT sensor to GPIO 4
 
-  Serial.println("Setup done");
+  Serial.println("[Init] Setup done");
 
 }
 
 void loop() {
   delay(dht.getMinimumSamplingPeriod());
 
-  Serial.println(dht.getStatusString());
-  Serial.print("Temperature: ");
-  Serial.println(dht.getTemperature(), 1);
-  Serial.print("Humidity: ");
-  Serial.println(dht.getHumidity()), 1;
+  const char* status = dht.getStatusString();
+  float temperature = dht.getTemperature();
+  float humidity = dht.getHumidity();
+  Serial.printf("[DHT] Status: %s\n", status);
+  Serial.printf("[DHT] Temperature: %f\n", temperature);
+  Serial.printf("[DHT] Humidity: %f\n", humidity);
 
   delay(1000);
 }
