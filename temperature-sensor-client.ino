@@ -1,13 +1,17 @@
 #include "wifi-config.h"
+#include "httpclient-config.h"
 
 #include <DHTesp.h>
+
 #include <ESP8266WiFi.h>
 
 
 DHTesp dht;
 
-const char* ssid     = STASSID;
+const char* ssid = STASSID;
 const char* password = STAPSK;
+
+const char* url = HTTPURL;
 
 void setup() {
   Serial.begin(115200);
