@@ -3,7 +3,6 @@
 #include <DHTesp.h>
 #include <ESP8266WiFi.h>
 
-#define DHT11_PIN 2
 
 DHTesp dht;
 
