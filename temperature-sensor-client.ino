@@ -48,5 +48,5 @@ void loop() {
   Serial.printf("[DHT] Temperature: %f\n", temperature);
   Serial.printf("[DHT] Humidity: %f\n", humidity);
 
-  delay(1000);
+  delay(60000);
 }
