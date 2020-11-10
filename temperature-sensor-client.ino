@@ -5,6 +5,8 @@
 
 #include <ESP8266WiFi.h>
 
+#include <ESP8266HTTPClient.h>
+#include <WiFiClientSecureBearSSL.h>
 
 DHTesp dht;
 
@@ -47,6 +49,44 @@ void loop() {
   Serial.printf("[DHT] Status: %s\n", status);
   Serial.printf("[DHT] Temperature: %f\n", temperature);
   Serial.printf("[DHT] Humidity: %f\n", humidity);
+
+  // Ensure that WiFi is connected
+  if (WiFi.status() != WL_CONNECTED)
+    return;
+
+  // HTTPS Client
+  WiFiClientSecure client;
+  // Disable certificate verification
+  client.setInsecure();
+
+  HTTPClient https;
+
+  String content = "{\"temperature\": ";
+  content = content +
+    temperature + ", " +
+    "\"humidity\": " + humidity +
+    "}";
+
+  Serial.printf("[HTTP] Send POST: %s\n", url);
+
+  https.begin(client, url);
+  https.addHeader("Content-Type", "application/json");
+  int httpCode = https.POST(content);
+
+  // httpCode will be negative on error
+  if (httpCode > 0) {
+    Serial.printf("[HTTP] Reponse code: %d\n", httpCode);
+
+    if (httpCode == HTTP_CODE_OK) {
+      const char* response = https.getString().c_str();
+      Serial.printf("[HTTP] Response content: %s\n", response);
+    }
+  }
+  else {
+    Serial.printf("[HTTP] Request failed: %s\n", https.errorToString(httpCode).c_str());
+  }
+
+  https.end();
 
   delay(60000);
 }
