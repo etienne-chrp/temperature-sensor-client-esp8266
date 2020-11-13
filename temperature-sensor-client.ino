@@ -1,5 +1,5 @@
-#include "wifi-config.h"
-#include "httpclient-config.h"
+#include "conf/wifi-config.h"
+#include "conf/httpclient-config.h"
 
 #include <DHTesp.h>
 
