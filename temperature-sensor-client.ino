@@ -46,9 +46,11 @@ void loop() {
   const char* status = dht.getStatusString();
   float temperature = dht.getTemperature();
   float humidity = dht.getHumidity();
+  float dewPoint = dht.computeDewPoint(temperature, humidity);
   Serial.printf("[DHT] Status: %s\n", status);
   Serial.printf("[DHT] Temperature: %f\n", temperature);
   Serial.printf("[DHT] Humidity: %f\n", humidity);
+  Serial.printf("[DHT] Dew Point: %f\n", dewPoint);
 
   // Ensure that WiFi is connected
   if (WiFi.status() != WL_CONNECTED)
@@ -61,10 +63,11 @@ void loop() {
 
   HTTPClient https;
 
-  String content = "{\"temperature\": ";
+  String content = "{";
   content = content +
-    temperature + ", " +
-    "\"humidity\": " + humidity +
+    "\"temperature\": " + temperature + ", " +
+    "\"humidity\": " + humidity + ", " +
+    "\"dewPoint\": " + dewPoint +
     "}";
 
   Serial.printf("[HTTP] Send POST: %s\n", url);
